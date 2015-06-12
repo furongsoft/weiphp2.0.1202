@@ -1,0 +1,28 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="span9 page_message">
+            <include file="Addons/_nav"/>
+            <div class="tab-content">
+                <iframe src="<php>echo addons_url('WeMall://Admin/Index');</php>" width="100%" height="100%" style="border: none; min-height: 800px; overflow: hidden" scrolling="no"></iframe>
+            </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" charset="utf-8">
+        //导航高亮
+        $('.side-sub-menu').find('a[href="{:U('
+        Addons / index
+        ')}"]'
+        ).closest('li').addClass('current');
+        if ($('ul.tab-nav').length) {
+            //当有tab时，返回按钮不显示
+            $('.btn-return').hide();
+        }
+        $(function () {
+            //支持tab
+            showTab();
+        })
+    </script>
+</block>

@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS `wp_abcinfosendc` (
+`id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+`token`  varchar(255) NOT NULL  COMMENT 'token标识',
+`title`  varchar(255) NOT NULL  COMMENT '标题',
+`description`  text NOT NULL  COMMENT '描述',
+`url`  varchar(255) NOT NULL  COMMENT '链接',
+`picurl`  varchar(255) NOT NULL  COMMENT '图片链接',
+`sort`  int(10) NOT NULL  DEFAULT 100 COMMENT '排序值',
+PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci CHECKSUM=0 ROW_FORMAT=DYNAMIC DELAY_KEY_WRITE=0;
+INSERT INTO `wp_model` (`name`,`title`,`extend`,`relation`,`need_pk`,`field_sort`,`field_group`,`attribute_list`,`template_list`,`template_add`,`template_edit`,`list_grid`,`list_row`,`search_key`,`search_list`,`create_time`,`update_time`,`status`,`engine_type`) VALUES ('abcinfosendc','ABC客服信息群发','0','','1','{"1":["title","description","url","picurl","sort"]}','1:基础','','','','','title:标题\r\nsort:排序号\r\npicurl:图片地址\r\nid:操作:[EDIT]|编辑,[DELETE]|删除','10','','','1406531064','1406531572','1','MyISAM');
+INSERT INTO `wp_attribute` (`name`,`title`,`field`,`type`,`value`,`remark`,`is_show`,`extra`,`model_id`,`is_must`,`status`,`update_time`,`create_time`,`validate_rule`,`validate_time`,`error_info`,`validate_type`,`auto_rule`,`auto_time`,`auto_type`) VALUES ('token','token标识','varchar(255) NOT NULL','string','','','0','','0','1','1','1406531192','1406531192','','3','','regex','','3','function');
+INSERT INTO `wp_attribute` (`name`,`title`,`field`,`type`,`value`,`remark`,`is_show`,`extra`,`model_id`,`is_must`,`status`,`update_time`,`create_time`,`validate_rule`,`validate_time`,`error_info`,`validate_type`,`auto_rule`,`auto_time`,`auto_type`) VALUES ('title','标题','varchar(255) NOT NULL','string','','','1','','0','1','1','1406531291','1406531291','','3','','regex','','3','function');
+INSERT INTO `wp_attribute` (`name`,`title`,`field`,`type`,`value`,`remark`,`is_show`,`extra`,`model_id`,`is_must`,`status`,`update_time`,`create_time`,`validate_rule`,`validate_time`,`error_info`,`validate_type`,`auto_rule`,`auto_time`,`auto_type`) VALUES ('description','描述','text NOT NULL','textarea','','','1','','0','0','1','1406531341','1406531341','','3','','regex','','3','function');
+INSERT INTO `wp_attribute` (`name`,`title`,`field`,`type`,`value`,`remark`,`is_show`,`extra`,`model_id`,`is_must`,`status`,`update_time`,`create_time`,`validate_rule`,`validate_time`,`error_info`,`validate_type`,`auto_rule`,`auto_time`,`auto_type`) VALUES ('url','链接','varchar(255) NOT NULL','string','','点击后跳转的链接','1','','0','0','1','1406531379','1406531379','','3','','regex','','3','function');
+INSERT INTO `wp_attribute` (`name`,`title`,`field`,`type`,`value`,`remark`,`is_show`,`extra`,`model_id`,`is_must`,`status`,`update_time`,`create_time`,`validate_rule`,`validate_time`,`error_info`,`validate_type`,`auto_rule`,`auto_time`,`auto_type`) VALUES ('picurl','图片链接','varchar(255) NOT NULL','string','','图文消息的图片链接，支持JPG、PNG格式，较好的效果为大图640*320，小图80*80','1','','0','0','1','1406531422','1406531422','','3','','regex','','3','function');
+INSERT INTO `wp_attribute` (`name`,`title`,`field`,`type`,`value`,`remark`,`is_show`,`extra`,`model_id`,`is_must`,`status`,`update_time`,`create_time`,`validate_rule`,`validate_time`,`error_info`,`validate_type`,`auto_rule`,`auto_time`,`auto_type`) VALUES ('sort','排序值','int(10) NOT NULL','num','100','数值越小排序越靠前','1','','0','1','1','1406531480','1406531480','','3','','regex','','3','function');
+UPDATE `wp_attribute` SET model_id= (SELECT MAX(id) FROM `wp_model`) WHERE model_id=0;

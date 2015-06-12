@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="misapplication-tap-highlight" content="no"/>
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="MobileOptimized" content="320"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" type="text/css" href="__ROOT__/XspWeb/Client/Scripts/Mui/css/mui.css?v={:SITE_VERSION}"/>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Mui/js/mui.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/MobileUI/js/mui.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Core/Common-0.2.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Core/AResult.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Core/OO-0.2.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/MobileUI/js/Page.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript"
+            src="__ROOT__/XspWeb/Client/Scripts/MobileUI/js/InitPage.js?v={:SITE_VERSION}"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <title>我要报名</title>
+    <style type="text/css">
+        .mui-card {
+            margin: 15px 15px 20px 15px;
+        }
+
+        .mui-table-view {
+            background-color: #efeff4;
+        }
+
+        .mui-input-row, .mui-btn-block {
+            margin: 5px 15px;
+        }
+
+        .mui-btn-block {
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+<div class="mui-card">
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            只能上传1张照片，图片大小不能超过1M，前后展示默认第一张。请等待图片上传完成后再点“提交”按钮
+        </li>
+    </ul>
+</div>
+<form action="{:addons_url('WeVote://Home/Registration')}" method="POST" enctype="multipart/form-data" id="reform">
+    <div class="mui-input-row">
+        <input type="text" class="mui-input-clear" placeholder="输入标题或姓名" id="title" name="title">
+    </div>
+    <div class="mui-input-row">
+        <textarea rows="5" placeholder="输入自我介绍，个人详情！最多100字" id="comment" name="comment"></textarea>
+    </div>
+    <div class="mui-input-row">
+        <textarea rows="5" placeholder="拉票宣言！最多100字" id="announce" name="announce"></textarea>
+    </div>
+    <div class="mui-input-row">
+        <textarea rows="5" placeholder="父母姓名" id="parent" name="parent"></textarea>
+    </div>
+    <div class="mui-input-row">
+        <textarea rows="5" placeholder="小区名称" id="address" name="address"></textarea>
+    </div>
+    <div class="mui-input-row">
+        <textarea rows="5" placeholder="楼层单元" id="cell" name="cell"></textarea>
+    </div>
+    <div class="mui-input-row">
+        <input type="text" class="mui-input-clear" placeholder="联系方式" id="tel" name="tel">
+    </div>
+    <input type="file" capture="camera" accept="image/*" id="cameraInput" name="cameraInput">
+    <button class="mui-btn mui-btn-primary mui-btn-block" id="submit">报名</button>
+    <input type="hidden" id="action_id" name="action_id" value="{:$action_id}">
+    <input type="hidden" id="open_id" name="open_id" value="{:$open_id}">
+</form>
+</body>
+<script type="text/javascript">
+    document.querySelector('#submit').onclick = function () {
+        document.querySelector('#reform').onsubmit();
+    }
+
+    wx.config({
+        debug: false,
+        appId: '{$signPackage["appId"]}',
+        timestamp: {$signPackage["timestamp"]},
+        nonceStr: '{$signPackage["nonceStr"]}',
+        signature: '{$signPackage["signature"]}',
+        jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage'
+        ]
+    });
+
+    wx.ready(function () {
+        wx.checkJsApi({
+            jsApiList: [
+                'getNetworkType',
+                'previewImage'
+            ],
+            success: function (res) {
+            }
+        });
+
+        var shareObj = {
+            title: '{$shareTitle}',
+            desc: '{$shareDesc}',
+            link: '{$shareUrl}',
+            imgUrl: '{$shareImageUrl}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                var data = {
+                    action_id: '{$action_id}'
+                };
+
+                $.getJSON('{$share_url}', data, function(result){
+                    if (result.status == 0) {
+                        mui.toast('分享成功');
+                    }
+                });
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        };
+
+        //分享朋友
+        wx.onMenuShareAppMessage(shareObj);
+
+        //分享朋友圈
+        wx.onMenuShareTimeline(shareObj);
+    });
+
+    wx.error(function (res) {
+        var str = res.errMsg;
+    });
+</script>
+</html>

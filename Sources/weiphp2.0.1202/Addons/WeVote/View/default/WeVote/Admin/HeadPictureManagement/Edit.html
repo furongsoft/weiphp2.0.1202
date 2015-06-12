@@ -1,0 +1,126 @@
+<extend name="Base/common" />
+<block name="body">
+    <div class="span9 page_message">
+        <section id="contents">
+            <include file="Addons/_nav" />
+            <div class="tab-content">
+                <!-- 表单 -->
+                <form id="form" action="{:U('EditHeadPicture?action_id='.$actionid)}" method="post" class="form-horizontal doc-modal-form">
+                    <input type="hidden" name="id" value="{$pic.id}"/>
+                    <!-- 基础 -->
+                    <div id="tab1" class="tab-pane in tab1">
+                        <div class="form-item cf">
+                            <label class="item-label">标题<span class="check-tips">（请输入标题）</span></label>
+
+                            <div class="controls">
+                                <input type="text" class="text input-large" name="title" value="{$pic.title}">
+                            </div>
+                        </div>
+                        <div class="form-item cf">
+                            <label class="item-label">图片链接地址<span class="check-tips">（请输入链接地址）</span></label>
+
+                            <div class="controls">
+                                <input type="text" class="text input-large" name="picurl" value="{$pic.picurl}">
+                            </div>
+                        </div>
+                        <div class="form-item cf">
+                            <label class="item-label">排序号</label>
+
+                            <div class="controls">
+                                <input type="number" class="text input-medium" name="orderno" value="{$pic.orderno}">
+                            </div>
+                        </div>
+                        <div class="form-item cf">
+                            <label class="item-label">图片<span class="check-tips"></span></label>
+
+                            <div class="controls uploadrow2" title="点击修改图片">
+                                <input type="file" id="upload_picture_img">
+                                <input type="hidden" name="picid" id="cover_id_img" value="{$pic.picid}"/>
+
+                                <div class="upload-img-box">
+                                    <notempty name="imgPath">
+                                        <div class="upload-pre-item2"><img width="180" height="100"
+                                                                           src="__ROOT__{:get_cover_url($pic['picid'])}"/></div>
+                                    </notempty>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-item cf">
+                            <label class="item-label">备注<span class="check-tips">（请输入备注）</span></label>
+
+                            <div class="controls">
+                                <input type="text" class="text input-large" name="remark" value="{$pic.remark}">
+                                <input type="hidden" name="configid"  value="{$actionid}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 按钮 -->
+                    <div class="form-item cf">
+                        <label class="item-label"></label>
+
+                        <div class="controls edit_sort_btn">
+                            <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">
+                                确 定
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <include file="Addons/weixinPreview" />
+    </div>
+    </section>
+    </div>
+</block>
+<block name="script">
+    <link href="__STATIC__/datetimepicker/css/datetimepicker.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+    <php>if(C('COLOR_STYLE')=='blue_color') echo '
+        <link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+        ';</php>
+    <link href="__STATIC__/datetimepicker/css/dropdown.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v={:SITE_VERSION}" charset="UTF-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+
+            //上传图片
+            /* 初始化上传插件 */
+            $("#upload_picture_img").uploadify({
+                "height": 100,
+                "swf": "__STATIC__/uploadify/uploadify.swf",
+                "fileObjName": "download",
+                "buttonText": "上传图片",
+                "uploader": "{:U('admin/File/uploadPicture',array('session_id'=>session_id()))}",
+                "width": 180,
+                'removeTimeout': 1,
+                'fileTypeExts': '*.jpg; *.png; *.gif;',
+                "onUploadSuccess": uploadPictureimg
+            });
+
+            function uploadPictureimg(file, data) {
+                var data = $.parseJSON(data);
+                var src = '';
+                if (data.status) {
+                    $("#cover_id_img").val(data.id);
+                    src = data.url || '__ROOT__' + data.path;
+                    showImg(src);
+                } else {
+                    updateAlert(data.info);
+                    setTimeout(function () {
+                        $('#top-alert').find('button').click();
+                    }, 1500);
+                }
+            }
+
+            if ("{$pic.picid}")
+                showImg("__ROOT__{:get_cover_url($pic['picid'])}");
+
+            function showImg(src) {
+                $("#upload_picture_img-button").removeClass("uploadify-button");
+                $("#upload_picture_img-button").html(
+                        '<div class="upload-pre-item2"><img width="180" height="100" src="' + src + '"/></div>'
+                );
+            }
+        })
+    </script>
+</block>

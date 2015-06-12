@@ -1,0 +1,90 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="span9 page_message">
+        <section id="contents">
+            <include file="Addons/_nav"/>
+            <div class="table-bar">
+                <div class="fl">
+                    <empty name="model.extend">
+                        <div class="tools">
+                            <a class="btn" href="{:U('AddView?action_id='.$actionid)}">添 加</a>
+                            <button class="btn" target-form="ids"
+                                    url="{:U('DeletePicture?action_id='.$actionid)}">删 除
+                            </button>
+                        </div>
+                    </empty>
+                </div>
+                <!-- 高级搜索 -->
+                <div class="search-form fr cf">
+                    <div class="sleft">
+                        <input type="text" name="search" class="search-input" value="{:I('title')}"
+                               placeholder="请输入图片名称">
+                        <a class="sch-btn" href="javascript:;" id="search" url="{:U('Index?action_id='.$actionid)}"><i
+                                class="btn-search"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据列表 -->
+            <div class="data-table">
+                <div class="table-striped">
+                    <table cellpadding="0" cellspacing="1">
+                        <thead>
+                        <tr>
+                            <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                            <th style="width:30px">编号</th>
+                            <th>标题</th>
+                            <th>图片链接地址</th>
+                            <th style="width:100px">备注</th>
+                            <th style="width:130px">图片</th>
+                            <th style="width:50px">排序号</th>
+                            <th style="width:60px"></th>
+                            <th style="width:60px"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <notempty name="list_fields">
+                            <volist name="list_fields" id="vo">
+                                <tr>
+                                    <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}"/></td>
+                                    <td>{$vo.id}</td>
+                                    <td>{$vo.title}</td>
+                                    <td>{$vo.picurl}</td>
+                                    <td>{$vo.remark}</td>
+                                    <td><img width="120" height="80" src="{:get_cover_url($vo['picid'])} "/></td>
+                                    <td>{$vo.orderno}</td>
+                                    <td>
+                                        <a class="btn"
+                                           href="{:addons_url($_REQUEST ['_addons'].'://'.$_REQUEST ['_controller'].'/EditHeadPicture', array('action_id' => $actionid, 'id' => $vo['id']))}">编辑</a>
+                                    </td>
+                                    <td><a class="btn"
+                                           href="{:addons_url($_REQUEST ['_addons'].'://'.$_REQUEST ['_controller'].'/DeletePicture', array('action_id' => $actionid, 'ids' => $vo['id']))}"
+                                           class="confirm ajax-get">删除</a>
+                                    </td>
+                                </tr>
+                            </volist>
+                            <else/>
+                            <td colspan="7" class="text-center"> aOh! 暂时还没有内容!</td>
+                        </notempty>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="page">{$_page|default=''}</div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        $(function () {
+            $("#search").click(function () {
+                var url = $(this).attr('url');
+                var search = $('input[name=search]').val();
+                if (search != '') {
+                    url += '&title=' + search;
+                }
+                window.location.href = url;
+            });
+        })
+    </script>
+</block>

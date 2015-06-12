@@ -1,0 +1,81 @@
+<!-- 头部 -->
+<include file="Public/mobile_head"/>
+<link rel="stylesheet" type="text/css" href="{:ADDON_PUBLIC_PATH}/info.css" media="all">
+<body>
+	<script type="text/javascript" src="{:ADDON_PUBLIC_PATH}/js/initinfo.js"></script>
+	<script>
+		var posturl="{$isinfo_url}";
+		var showurl="{$showurl}";
+	</script>
+	<div id="dail" style="height: 100px; width: 300px; opacity: 0.5;background-color:#000; border: solid 10px #999999;border-radius:10px;display: none;">
+        &nbsp;
+		</div>
+		<div id="dail2" style="height: 100px; width: 300px;font-size:20px;opacity: 1;text-align:center; color:#FFF; border-radius:10px;display: none;">
+			<span id="alertinfo">中奖后需要完善您的基本信息<br/>便于与您联系！</span>
+			<br/>
+			<button id="btn_alert" class="home_btn mb_10 flex_1" >确定</button>
+	</div>	
+	<div class="container body">
+    	<img src="{:ADDON_PUBLIC_PATH}/images/info_head.png" width="100%"/>
+    	<div class="p_10"> 
+            <!-- 表单 -->          
+              <!-- 基础文档模型 -->
+              <div id="tab1" class="tab-pane">                   
+                   <div class="form-item cf">
+                        <label class="item-label">昵称</label>
+                        <div class="controls">
+                          <input type="text" class="text input-medium" name="nickname" id="nickname" value="" />
+                         </div>
+                   </div>                   
+                   <div class="form-item cf">
+                        <label class="item-label">联系电话</label>
+                        <div class="controls">
+                          <input type="text" class="text input-large" name="mobile" id="mobile" value="" />
+                      	</div>
+                   </div>
+                   <div class="form-item cf tb pt_10">
+                         <input type="hidden" class="text input-large" name="id" value="{$_GET['id']}">
+                		<button class="home_btn submit-btn ajax-post mb_10 flex_1" id="btn_submit" type="button" target-form="form-horizontal">提  交</button>
+                  </div>
+          	</div>           
+        </div>
+		<script type="text/javascript">
+			
+$(function(){
+	$("#btn_alert").bind("click",HideDiv)
+	ShowDiv();
+	
+	$("#btn_submit").bind("click",function(){
+		//$.Dialog.loading();//loading等待调用  loading完成$.Dialog.close();关闭loading
+		//$.Dialog.success();//成功调用 提示一秒后自动关闭
+		var nickname = $('#nickname').val();
+		var mobile = $('#mobile').val();
+		if(nickname!=undefined && nickname==""){
+			$.Dialog.fail("请填写昵称！");//成功调用 提示一秒后自动关闭
+			return false;
+		}
+		if(mobile!=undefined && mobile==""){
+			$.Dialog.fail("请填写联系电话！");//成功调用 提示一秒后自动关闭
+			return false;
+		}
+	
+		$.ajax({
+			type: 'POST',
+            url: posturl,
+			data:{nickname:nickname,mobile:mobile},
+            dataType: 'json',
+            cache: false,
+            error: function() {
+				
+            },
+            success: function(json) {
+            	alert('信息提交成功');				
+                top.window.location = showurl;
+            }
+        });
+	});
+});
+		</script>
+    </div>
+</body>
+</HTML>

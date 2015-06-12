@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <script src="XspWeb/Client/Scripts/QuoJS/quo.js"></script>
+    <script src="XspWeb/Client/Scripts/QuoJS/quo.standalone.js"></script>
+    <script src="XspWeb/Client/Scripts/QuoJS/quo.gestures.js"></script>
+    <link href="XspWeb/Client/Scripts/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css" rel="Stylesheet"
+          type="text/css"/>
+    <script src="XspWeb/Client/Scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/jquery-migrate-1.2.1.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Core/Common-0.2.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Core/AResult.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Core/OO-0.2.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Core/log-0.1.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Misc/Language.zh_CN.js"></script>
+    <script src="XspWeb/Client/Scripts/Core/List.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Core/HashTable.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Core/MessageQueue.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Common/MessageIds.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Common/Point.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Common/Size.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Common/Rectangle.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Common/LongLatPoint.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Common/TilePoint.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Renderable/Renderable.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Renderable/DoubleBuffer.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Renderable/Html5Renderable.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Renderable/Html5DoubleBuffer.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Projections/WGS84ToMercatorProjection.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Projections/MercatorToScreenProjection.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Projections/ScreenToLayerProjection.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Projections/CoordinateConverter.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Layer/Layer.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Layer/MapLayer/MapLayer.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Layer/MapLayer/MapLayerTile.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Layer/MapLayer/OnlineMapLayer.js" type="text/javascript"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Layer/MapLayer/RasterLayer.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Layer/MapLayer/FeatureLayer.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Element.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Circle.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Arc.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Point.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Image.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Line.js"></script>
+    <script src="BaseStationLine.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Cross.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Ellipse.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Text.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Rectangle.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Polygon.js"></script>
+    <script src="Popup.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Scale.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/Element/Compass.js"></script>
+    <script src="Sector.js"></script>
+    <script src="BaseStation.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/ClassFactory.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/GisControl/GISControl.js"></script>
+    <script src="XspWeb/Client/Scripts/Controls/MapX.js"></script>
+</head>
+<body>
+<div id="Div_GISControl"></div>
+<div style="display:block;">
+    Width:<input type="text" id="Width" value="800">
+    Height:<input type="text" id="Height" value="600">
+    <input type="button" value="初始化地图" id="Initialize">
+    CellId:<input type="text" id="CellId">
+    <input type="button" value="设置当前位置" id="setCurrent">
+    <input type="button" value="基站拉线" id="LineToBaseStation">
+    <input type="button" value="导入基站" id="Import">
+    <input type="button" value="设置当前位置图片" id="SetLocationImage">
+</div>
+</body>
+<script>
+    var initialize = document.getElementById("Initialize");
+    initialize.onclick = function (e) {
+        var width = $("#Width").val();
+        var height = $("#Height").val();
+        // 初始化地图
+        mapControl.Initialize(width, height, 17, 119.308584, 26.075692);
+    };
+
+    var setLocationImage = document.getElementById("SetLocationImage");
+    setLocationImage.onclick = function (e) {
+        var long = 119.308584;
+        var lat = 26.075692;
+       mapControl.SetLocationImage("calldropped@2x.png", long, lat);
+    };
+
+    var set = document.getElementById("setCurrent");
+    set.onclick = function (e) {
+        // 添加当前位置图层
+        var long = 119.308584;
+        var lat = 26.075692;
+        mapControl.SetCurrentLocation(long, lat, 2, 0, 1, 0);
+    };
+
+    var lineToBaseStation = document.getElementById("LineToBaseStation");
+    lineToBaseStation.onclick = function (e) {
+        var long = 119.308584;
+        var lat = 26.075692;
+        var cellId = $("#CellId").val();
+        mapControl.LineToBaseStation(cellId, long, lat, 0, 0, 0);
+    };
+
+    var importBaseStation = document.getElementById("Import");
+    importBaseStation.onclick = function (e) {
+        var coolerList = new XspWeb.Core.List();
+        coolerList.Add("blue");
+        coolerList.Add("yellow");
+        coolerList.Add("green");
+        coolerList.Add("red");
+        coolerList.Add("gray");
+        coolerList.Add("pink");
+        /**
+         * 构建基站json,
+         * 格式:
+            {
+                 Name: "鼓楼邮电公寓",
+                 Longitude: 119.2213,
+                 Latitude: 26.0035,
+                 Color: [[255,0,0],[255,0,0],[255,0,0]],
+                 Info: ["BSC141,24604,cellId:11","BSC141,24604,cellId:12","BSC141,24604,cellId:13"],
+                 Azimuth: [330,130,270],
+                 CellId: [1, 2, 3]
+             }
+         */
+        //var baseStation = '{\"CellId\":[\"11\",\"12\",\"13\",\"14\",\"15\",\"16\"],\"Latitude\":26.08791667,\"Azimuth\":[330,130,270,330,130,270],\"Color\":[[0.1058824,0.4,0.6196079],[0.5333334,0.1294118,0.4784314],[0.8862745,0.8941177,0.4117647],[0.7019608,0.7254902,0.8862745],[0.08235294,0.572549,0.9960784],[0.7803922,0.5686275,0.8352941]],\"Longitude\":119.3065,\"Name\":\"鼓楼邮电公寓1\",\"Info\":[\"LAC:24604 Cell ID:11 BCCH:71\",\"LAC:24604 Cell ID:12 BCCH:76\",\"LAC:24604 Cell ID:13 BCCH:86\",\"LAC:24604 Cell ID:14 BCCH:536\",\"LAC:24604 Cell ID:15 BCCH:515\",\"LAC:24604 Cell ID:16 BCCH:527\"]}';
+        mapControl.ClearBaseStation();
+        mapControl.ClearLocation();
+        mapControl.BeginLockMap();
+        for (var j = 0; j < 3000; j++) {
+           var baseStation = '{\"CellId\":[\"11\",\"12\",\"13\",\"14\",\"15\",\"16\"],\"Latitude\":'
+                           //119.308584;
+                           //26.075692;
+//                   + 26.075692 +
+                    + (26.003509476807807 + Math.random() * 0.11226471319729114) +
+                    ',\"Azimuth\":[330,130,270,330,130,270],\"Color\":[[0.1058824,0.4,0.6196079],[0.5333334,0.1294118,0.4784314],[0.8862745,0.8941177,0.4117647],[0.7019608,0.7254902,0.8862745],[0.08235294,0.572549,0.9960784],[0.7803922,0.5686275,0.8352941]],\"Longitude\":'
+//                   + 119.308584 +
+                    + (119.22138002050782 + Math.random() * 0.1599884033203125) +
+                    ',\"Name\":\"鼓楼邮电公寓1\",\"Info\":[\"LAC:24604 Cell ID:11 BCCH:71\",\"LAC:24604 Cell ID:12 BCCH:76\",\"LAC:24604 Cell ID:13 BCCH:86\",\"LAC:24604 Cell ID:14 BCCH:536\",\"LAC:24604 Cell ID:15 BCCH:515\",\"LAC:24604 Cell ID:16 BCCH:527\"]}';
+            mapControl.ImportBaseStation(baseStation);
+        }
+        mapControl.EndLockMap();
+        mapControl.UpdateMap();
+    };
+</script>
+<script>
+    // 测试数据
+    var longitude = 119.22138002050782;
+    var latitude = 26.003509476807807;
+    var maxDelatLongitude = 0.1599884033203125;
+    var maxDelatLatitude = 0.11226471319729114;
+
+    // 创建地图
+    var div = document.getElementById("Div_GISControl");
+    var mapControl = new XspWeb.Controls.MapX(div);
+</script>
+</html>

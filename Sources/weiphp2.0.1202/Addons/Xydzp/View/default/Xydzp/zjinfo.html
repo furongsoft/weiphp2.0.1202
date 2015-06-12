@@ -1,0 +1,25 @@
+<!-- 头部 -->
+<include file="Public/mobile_head"/>	
+<link rel="stylesheet" type="text/css" href="{:ADDON_PUBLIC_PATH}/xydzp.css" media="all">
+<body class="xydzp-end">
+<br/>
+<div >
+	<table  class="table table-bordered">
+		<table style="margin:0 auto;" class="table table-bordered fontcolor">
+			<tr>
+				<th>昵称</th>
+				<th>奖品</th>
+				<th>中奖时间</th>
+			</tr>
+		<volist name="zjuserlist" id="jp">
+			<tr>
+				<td>{$jp.nickname}</td>
+				<td>{$jp.title}</td>
+				<td>{$jp.zjdate|time_format}</td>
+			</tr>
+		</volist>
+		</table>
+	</table>
+</div>
+</body>
+</html>

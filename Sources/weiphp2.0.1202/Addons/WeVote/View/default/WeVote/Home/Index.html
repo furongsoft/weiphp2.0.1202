@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="misapplication-tap-highlight" content="no"/>
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="MobileOptimized" content="320"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" type="text/css" href="__ROOT__/XspWeb/Client/Scripts/Mui/css/mui.css?v={:SITE_VERSION}"/>
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Addons/WeVote/View/default/Public/css/page.css?v={:SITE_VERSION}"/>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Mui/js/mui.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/MobileUI/js/mui.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Core/Common-0.2.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Core/AResult.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/Core/OO-0.2.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript" src="__ROOT__/XspWeb/Client/Scripts/MobileUI/js/Page.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript"
+            src="__ROOT__/XspWeb/Client/Scripts/MobileUI/js/InitPage.js?v={:SITE_VERSION}"></script>
+    <script src="__ROOT__/XspWeb/Client/Scripts/Mui/js/mui.pullToRefresh.js"></script>
+    <script src="__ROOT__/XspWeb/Client/Scripts/Mui/js/mui.pullToRefresh.material.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <title></title>
+    <style>
+        .mui-pull-bottom-tips{
+            display: none;
+        }
+        .mui-popover {
+            height: 65%;
+            width: 85%;
+        }
+    </style>
+</head>
+<body>
+<!-- 图册 -->
+<div id="slider" class="mui-slider">
+    <div class="mui-slider-group mui-slider-loop">
+        <div class="mui-slider-item mui-slider-item-duplicate">
+        </div>
+        <volist name="headpic" id="hp">
+            <div class="mui-slider-item">
+                <a href="{$hp.picurl}"><img src="__ROOT__{:get_cover_url($hp['picid'])} "></a>
+                </div>
+        </volist>
+        <div class="mui-slider-item mui-slider-item-duplicate">
+        </div>
+    </div>
+    <div class="mui-slider-indicator">
+        <div class="mui-indicator mui-active"></div>
+        <div class="mui-indicator"></div>
+        <div class="mui-indicator"></div>
+        <div class="mui-indicator"></div>
+    </div>
+</div>
+<!-- 动态数据 -->
+<ul class="mui-table-view mui-grid-view mui-grid-9 white-bg">
+    <li class="mui-table-view-cell mui-media mui-col-xs-4">
+        <a href="#">
+            <span>参与选手</span>
+            <div class="mui-media-body">{$candidatesCount}</div>
+        </a>
+    </li>
+    <li class="mui-table-view-cell mui-media mui-col-xs-4">
+        <a href="#">
+            <span>累计投票</span>
+            <div class="mui-media-body">{$voteCount}</div>
+        </a>
+    </li>
+    <li class="mui-table-view-cell mui-media mui-col-xs-4">
+        <a href="#">
+            <span>访问量</span>
+            <div class="mui-media-body">{$visitCount}</div>
+        </a>
+    </li>
+
+</ul>
+<!-- 点击列表 -->
+<ul class="mui-table-view click-list">
+    <li class="mui-table-view-cell">活动介绍:{$introduce}</li>
+    <li class="mui-table-view-cell">活动日期:{$datetime}</li>
+    <li class="mui-table-view-cell registration"><a href="#voteInfo-div" class="voteInfoButton">我的投票记录</a></li>
+    <li class="mui-table-view-cell registration"><a href="{:addons_url('WeVote://Home/Registration', array('action_id' => $action_id))}">我要报名</a></li>
+    <li class="mui-table-view-cell registration"><a href="{$shareUrl}">关注微信号</a></li>
+</ul>
+<!-- 选项卡 -->
+<div id="segmentedControl" class="mui-segmented-control">
+    <a class="mui-control-item latestA mui-active" href="javascript:void(0)">
+        最新
+    </a>
+    <a class="mui-control-item allA" href="javascript:void(0)">
+        全部
+    </a>
+</div>
+<!-- 瀑布布局 -->
+<div class="mui-content-padded mui-slider-group2">
+    <input type="hidden" name="currentPage" value="{$currentPage}" id="currentPage">
+    <input type="hidden" name="currentType" value="{$type}" id="currentType">
+    <input type="hidden" name="currentActionId" value="{$action_id}" id="currentActionId">
+    <div id="item1mobile" class="mui-control-content mui-scroll2 mui-active">
+        <ul class="mui-table-view mui-grid-view transparent-list mui-table-view2" id="mui-table-view2">
+            <volist name="candidatesData" id="vo">
+                <li style="height: 47%;width: 47%;" class="mui-table-view-cell mui-media list-width">
+                    <a href="{:addons_url('WeVote://Home/Detail', array('action_id' => $action_id, 'id' => $vo['id']))}">
+                        <img class="mui-media-object" src="{$vo.picture}">
+
+                        <div class="mui-media-body list-title">{$vo.title}</div>
+                    </a>
+                    <div>
+                        <button class="bt-list VoteButton">
+                            <input type="hidden" name="id" class="id" value="{$vo.id}">
+                            <input type="hidden" name="count" class="count" value="{$vo.count}">
+                            投票
+                        </button>
+                        <span class="bt-data countClass">{$vo.count}票</span>
+                    </div>
+
+                </li>
+            </volist>
+        </ul>
+    </div>
+</div>
+<div class="distance">
+</div>
+
+<div id="mui-popover" class="mui-popover topDataClass">
+    <div class="mui-popover-arrow"></div>
+    <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-grid-view mui-grid-9">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    排名
+                </li>
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    姓名
+                </li>
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    得票数
+                </li>
+            </ul>
+            <ul class="mui-table-view mui-grid-view mui-grid-9 topData">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="voteInfo-div" class="mui-popover voteInfoClass">
+    <div class="mui-popover-arrow"></div>
+    <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-grid-view mui-grid-9">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    序号
+                </li>
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    姓名
+                </li>
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    票数
+                </li>
+            </ul>
+            <ul class="mui-table-view mui-grid-view mui-grid-9 voteInfo">
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+<nav class="mui-bar mui-bar-tab">
+    <a class="mui-tab-item mui-active" href="#tabbar">
+        <span class="mui-icon mui-icon-phone"></span>
+        <span class="mui-tab-label">电话</span>
+    </a>
+    <a class="mui-tab-item searchButton" href="#tabbar-with-chat">
+        <span class="mui-icon mui-icon-chat"></span>
+        <span class="mui-tab-label">搜索</span>
+    </a>
+    <a class="mui-tab-item topButton" href="#mui-popover">
+        <span class="mui-icon mui-icon-list"></span>
+        <span class="mui-tab-label">排行</span>
+    </a>
+    <a class="mui-tab-item" href="#tabbar-with-map">
+        <span class="mui-icon mui-icon-star"></span>
+        <span class="mui-tab-label">分享</span>
+    </a>
+</nav>
+</body>
+<script type="text/javascript">
+    function InitializeComponent() {
+        mui('.mui-scroll-wrapper').scroll();
+
+        var gallery = mui('.mui-slider');
+        gallery.slider({
+            interval: 2000//自动轮播周期，若为0则不自动播放，默认为0；
+        });
+
+        var latestA = document.getElementsByClassName('latestA')[0];
+        var allA = document.getElementsByClassName('allA')[0];
+        // 设置当前的类型
+        var currentType = document.getElementById('currentType');
+        if(currentType.value == 'latest'){
+            latestA.className = 'mui-control-item latestA mui-active';
+            allA.className = 'mui-control-item allA';
+        }
+        else{
+            latestA.className = 'mui-control-item latestA';
+            allA.className = 'mui-control-item allA mui-active';
+        }
+
+        // 切换全部和最新修改type
+        latestA.addEventListener('tap', function(){
+            var url = "{:addons_url('WeVote://Home/Index')}";
+            var actionId = document.getElementById('currentActionId');
+            location.href = url + "&type=latest&action_id=" + actionId.value;
+        });
+        allA.addEventListener('tap', function(){
+            var url = "{:addons_url('WeVote://Home/Index')}";
+            var actionId = document.getElementById('currentActionId');
+            location.href = url + "&type=all&action_id=" + actionId.value;
+        });
+        // 绑定投票按钮单击击事件
+        var voteButtons = document.getElementsByClassName('VoteButton');
+        var length = voteButtons.length;
+        for(var i = 0; i < length; i ++){
+            voteButtons[i].addEventListener('tap', voteButtonHandler);
+        }
+
+        // 绑定搜索按钮单击事件
+        document.getElementsByClassName("searchButton")[0].addEventListener('tap', function(e) {
+            e.detail.gesture.preventDefault(); //修复iOS 8.x平台存在的bug，使用plus.nativeUI.prompt会造成输入法闪一下又没了
+            var actionId = document.getElementById('currentActionId');
+            var url = "{:addons_url('WeVote://Home/Index')}" + "&action_id=" + actionId.value;
+            mui.prompt('请输入您要搜索的内容：', function(e) {
+                if (e.index == 0) {
+                    location.href = url + "&query=" + e.value;
+                }
+            })
+        });
+
+        // 绑定排行按钮单击事件
+        document.getElementsByClassName("topButton")[0].addEventListener('tap', function(e) {
+            mui.toast('排行信息正在加载中....');
+            var topData = document.getElementsByClassName('topData')[0];
+            topData.innerHTML = '';
+
+            var url = "{:addons_url('WeVote://Home/GetTopAction')}";
+            var actionId = document.getElementById('currentActionId');
+            var data = {
+                action_id: actionId.value
+            };
+
+            $.getJSON(url, data, function(result){
+                var li, textNode;
+                for(var i = 0; i < result.topData.length; i++){
+                    li = document.createElement('li');
+                    li.className = 'mui-table-view-cell mui-media mui-col-xs-4';
+                    textNode = document.createTextNode(i+1);
+                    li.appendChild(textNode);
+                    topData.appendChild(li);
+
+                    li = document.createElement('li');
+                    li.className = 'mui-table-view-cell mui-media mui-col-xs-4';
+                    textNode = document.createTextNode(result.topData[i].title);
+                    li.appendChild(textNode);
+                    topData.appendChild(li);
+
+                    li = document.createElement('li');
+                    li.className = 'mui-table-view-cell mui-media mui-col-xs-4';
+                    textNode = document.createTextNode(result.topData[i].count);
+                    li.appendChild(textNode);
+                    topData.appendChild(li);
+                }
+            });
+        });
+
+        // 绑定投票信息按钮单击事件
+        document.getElementsByClassName("voteInfoButton")[0].addEventListener('tap', function(e) {
+            mui.toast('投票信息正在加载中....');
+            var voteInfo = document.getElementsByClassName('voteInfo')[0];
+            voteInfo.innerHTML = '';
+
+            var url = "{:addons_url('WeVote://Home/GetVoteInfoAction')}";
+            var actionId = document.getElementById('currentActionId');
+            var data = {
+                action_id: actionId.value
+            };
+            $.getJSON(url, data, function(result){
+                var li, textNode;
+                for(var i = 0; i < result.data.length; i++){
+                    li = document.createElement('li');
+                    li.className = 'mui-table-view-cell mui-media mui-col-xs-4';
+                    textNode = document.createTextNode(i+1);
+                    li.appendChild(textNode);
+                    voteInfo.appendChild(li);
+
+                    li = document.createElement('li');
+                    li.className = 'mui-table-view-cell mui-media mui-col-xs-4';
+                    textNode = document.createTextNode(result.data[i].title);
+                    li.appendChild(textNode);
+                    voteInfo.appendChild(li);
+
+                    li = document.createElement('li');
+                    li.className = 'mui-table-view-cell mui-media mui-col-xs-4';
+                    textNode = document.createTextNode(result.data[i].num);
+                    li.appendChild(textNode);
+                    voteInfo.appendChild(li);
+                }
+            });
+        });
+
+        // 是否正在上拉或者下拉加载中
+        var isPullLoading = false;
+
+        //循环初始化所有下拉刷新，上拉加载。
+        $.each(document.querySelectorAll('.mui-slider-group2 .mui-scroll2'), function(index, pullRefreshEl) {
+            $(pullRefreshEl).pullToRefresh({
+                down: {
+                    callback: function() {
+                        this.endPullDownToRefresh();
+                    }
+                },
+                up: {
+                    callback: function() {
+                        if(!isPullLoading){
+                            mui.toast('正在加载中....');
+                            isPullLoading = true;
+                            var self = this;
+                            var currentType = document.getElementById('currentType');
+                            var currentPage = document.getElementById('currentPage');
+                            var type = currentType.value;
+                            var page = Number(currentPage.value);
+                            var url = "{:addons_url('WeVote://Home/GetCandidatesAction')}";
+                            var actionId = document.getElementById('currentActionId');
+                            var data = {
+                                type: type,
+                                page: page + 1,
+                                rows: 6,
+                                action_id: actionId.value
+                            };
+                            $.getJSON(url, data, function(result){
+                                if(result.data.length > 0){
+                                    currentPage.value = result.currentPage;
+                                    var ul = self.element.querySelector('.mui-table-view2');
+                                    ul.appendChild(createFragment(ul, result.data));
+                                    self.endPullUpToRefresh();
+                                }
+                                isPullLoading = false;
+                            });
+                        }
+                        this.endPullUpToRefresh();
+                    }
+                }
+            });
+        });
+        var createFragment = function(ul, data) {
+            var fragment = document.createDocumentFragment();
+            var li, a, img, muiMediaBody, buttonDiv, button, text, src, input;
+            for (var i = 0; i < data.length; i++) {
+                var info = data[i];
+                var title = info.title;
+                var count = info.count;
+                var picture = info.picture;
+                var id = info.id;
+
+                li = document.createElement('li');
+                var mod = i % 2;
+                if(mod == 0){
+                    li.className = 'mui-table-view-cell mui-media list-width right-margin';
+                }
+                else{
+                    li.className = 'mui-table-view-cell mui-media list-width';
+                }
+                //a
+                a = document.createElement('a');
+                var href = document.createAttribute('href');
+                href.value = "{:addons_url('WeVote://Home/Detail', array('action_id' => $action_id), false)}/id/" + id + ".html";
+                a.setAttributeNode(href);
+                // img
+                img = document.createElement('img');
+                img.className = 'mui-media-object';
+                src = document.createAttribute('src');
+                src.value = picture;
+                img.setAttributeNode(src);
+                a.appendChild(img);
+                // div mui-media-body
+                muiMediaBody = document.createElement('muiMediaBody');
+                muiMediaBody.className = 'mui-media-body list-title';
+                text = document.createTextNode(title);
+                muiMediaBody.appendChild(text);
+                a.appendChild(muiMediaBody);
+                // div
+                buttonDiv = document.createElement('buttonDiv');
+                // button
+                button = document.createElement('button');
+                button.className = 'bt-list VoteButton';
+                // input id
+                input = document.createElement('input');
+                var type = document.createAttribute('type');
+                type.value = 'hidden';
+                var name = document.createAttribute('name');
+                name.value = 'id';
+                input.value = id;
+                input.className = 'id';
+                input.setAttributeNode(type);
+                input.setAttributeNode(name);
+                button.appendChild(input);
+                // input count
+                input = document.createElement('input');
+                type = document.createAttribute('type');
+                type.value = 'hidden';
+                name = document.createAttribute('name');
+                name.value = 'count';
+                input.value = count;
+                input.className = 'count';
+                input.setAttributeNode(type);
+                input.setAttributeNode(name);
+                button.appendChild(input);
+
+                text = document.createTextNode('投票');
+                button.appendChild(text);
+                button.addEventListener('tap', voteButtonHandler);
+                buttonDiv.appendChild(button);
+
+                // span countClass
+                var countSpan = document.createElement('span');
+                countSpan.className = 'bt-data countClass';
+                countSpan.innerHTML = count + '票';
+                buttonDiv.appendChild(countSpan);
+
+                li.appendChild(a);
+                li.appendChild(buttonDiv);
+                fragment.appendChild(li);
+            }
+            return fragment;
+        };
+    }
+
+    wx.config({
+        debug: false,
+        appId: '{$signPackage["appId"]}',
+        timestamp: '{$signPackage["timestamp"]}',
+        nonceStr: '{$signPackage["nonceStr"]}',
+        signature: '{$signPackage["signature"]}',
+        jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage'
+        ]
+    });
+
+    wx.ready(function () {
+        wx.checkJsApi({
+            jsApiList: [
+                'getNetworkType',
+                'previewImage'
+            ],
+            success: function (res) {
+            }
+        });
+
+        var shareObj = {
+            title: '{$shareTitle}',
+            desc: '{$shareDesc}',
+            link: '{$shareUrl}',
+            imgUrl: '{$shareImageUrl}',
+            trigger: function (res) {
+            },
+            success: function (res) {
+                var data = {
+                    action_id: '{$action_id}'
+                };
+
+                $.getJSON('{$share_url}', data, function(result){
+                    if (result.status == 0) {
+                        mui.toast('分享成功');
+                    }
+                });
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+            }
+        };
+
+        //分享朋友
+        wx.onMenuShareAppMessage(shareObj);
+
+        //分享朋友圈
+        wx.onMenuShareTimeline(shareObj);
+    });
+
+    wx.error(function (res) {
+        var str = res.errMsg;
+    });
+
+    // 投票处理函数
+    function voteButtonHandler(e){
+        var actionId = document.getElementById('currentActionId');
+        var id = this.getElementsByClassName('id')[0];
+        var count = this.getElementsByClassName('count')[0];
+        var url = "{:addons_url('WeVote://Home/VoteAction')}";
+        var data = {
+            candidate_id: id.value,
+            action_id: actionId.value
+        };
+        var self = this;
+        $.getJSON(url, data, function(result){
+            if (result.status) {
+                mui.toast(result.info);
+                var countSpan = self.parentNode.getElementsByClassName('countClass')[0];
+                countSpan.innerHTML = ++count.value + '票';
+            } else {
+                mui.toast(result.info);
+            }
+        });
+    }
+</script>
+</html>

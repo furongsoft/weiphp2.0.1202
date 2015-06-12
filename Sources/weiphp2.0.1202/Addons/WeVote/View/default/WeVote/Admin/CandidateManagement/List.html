@@ -1,0 +1,103 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="span9 page_message">
+        <section id="contents">
+            <include file="Addons/_nav"/>
+            <div class="table-bar">
+                <div class="fl">
+                    <empty name="model.extend">
+                        <div class="tools">
+                            <button class="btn ajax-post confirm" target-form="ids"
+                                    url="{:$remove_url}">删 除
+                            </button>
+                        </div>
+                    </empty>
+                </div>
+                <!-- 高级搜索 -->
+                <div class="search-form fr cf">
+                    <div class="sleft">
+                        <php>empty($search_key) && $search_key=$model['search_key'];empty($search_key) &&
+                            $search_key='title';
+                        </php>
+                        <input type="text" name="{$search_key}" class="search-input" value="{:I($search_key)}"
+                               placeholder="请输入关键字">
+                        <a class="sch-btn" href="javascript:;" id="search"
+                           url="{:U('lists','model='.$model['name'],false)}"><i class="btn-search"></i></a></div>
+                </div>
+            </div>
+
+            <!-- 数据列表 -->
+            <div class="data-table">
+                <div class="table-striped">
+                    <table cellpadding="0" cellspacing="1">
+                        <!-- 表头 -->
+                        <thead>
+                        <tr>
+                            <th class="row-selected row-selected"><input class="check-all" type="checkbox">
+                            </th>
+                            <volist name="list_fields" id="field">
+                                <th>{$field.title}</th>
+                            </volist>
+                            <th class="row-selected row-selected" style="width: 60px"></th>
+                        </tr>
+                        </thead>
+
+                        <!-- 列表 -->
+                        <tbody>
+                        <volist name="list_data" id="data">
+                            <tr>
+                                <td><input class="ids" type="checkbox" value="{$data['id']}" name="ids[]"></td>
+                                <volist name="list_fields" id="field">
+                                    <td>{:GetListField($field, $data)}</td>
+                                </volist>
+                                <td><a class="btn" href="{:addons_url($_REQUEST ['_addons'].'://'.$_REQUEST ['_controller'].'/Edit', array('action_id' => $data['action_id'], 'id' => $data['id']))}">编辑</a></td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="page">{$_page|default=''}</div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        //导航高亮
+        $('.side-sub-menu').find('a[href="{:U('
+        Addons / index
+        ')}"]'
+        ).closest('li').addClass('current');
+        if ($('ul.tab-nav').length) {
+            //当有tab时，返回按钮不显示
+            $('.btn-return').hide();
+        }
+        $(function () {
+            //支持tab
+            showTab();
+        });
+
+        $(function () {
+            //搜索功能
+            $("#search").click(function () {
+                var url = $(this).attr('url');
+                var query = $('.search-form').find('input').serialize();
+                query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g, '');
+                query = query.replace(/^&/g, '');
+                if (url.indexOf('?') > 0) {
+                    url += '&' + query;
+                } else {
+                    url += '?' + query;
+                }
+                window.location.href = url;
+            });
+
+            //回车自动提交
+            $('.search-form').find('input').keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#search").click();
+                }
+            });
+        })
+    </script>
+</block>

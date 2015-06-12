@@ -1,0 +1,14 @@
+html, body {
+    background-color: #efeff4;
+}
+
+.mui-datagrid-content{margin:0px auto; background-color:#FFFFFF; }
+.mui-datagrid-view{bordercolor:"#FFFFFF";      }
+.mui-datagrid-bold-view-cell{ background-color:#217bc0;color:#FFFFFF;text-align: center;font-weight: bold;}
+.mui-datagrid-view-cell{ background-color:#d9e7f2;color:#274256;text-align: center;}
+.mui-datagrid-checkbox{width:10px}
+
+
+.mui-input-dropdownlist{background:url("../../img/a2.jpg") no-repeat scroll right center transparent;}
+.mui-input-inputdownlist{background:url("../../img/a2.jpg") no-repeat scroll right center transparent;}
+.mui-a-inputdownlist{position: absolute;margin-top: 0px;margin-left: -20px;z-index: 99;width:20px;height:40px;}
